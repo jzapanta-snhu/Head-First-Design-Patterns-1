@@ -1,16 +1,21 @@
 
 FROM openjdk:8u181-jdk
 
-VOLUME /tmp
+ARG JAVA_OPTS
+ENV JAVA_OPTS=$JAVA_OPTS
 
+RUN mkdir /src
 RUN mkdir /app
-ADD . /app
+ADD . /src
 
-WORKDIR /app
+WORKDIR /src
 RUN ls -al
 
-RUN javac *.java
+RUN javac -d /app -verbose *.java
+RUN ls -al
 
-RUN jar cf ./duck.jar *.class
+WORKDIR /app
 
-CMD ["java", "-cp", "/app/duck.jar", "headfirst.designpatterns.strategy.MiniDuckSimulator"]
+RUN ls -al
+
+ENTRYPOINT ["java","headfirst/designpatterns/strategy/MiniDuckSimulator"]
